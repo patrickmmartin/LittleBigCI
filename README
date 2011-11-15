@@ -15,7 +15,7 @@ Ensure the working copy and repo formats match.
 Output
 
 You will get:
- * an example SVN repo with an example project
- * an example project checkout and test machine checkout
- * 3 scheduled tasks performing the core of the CI process
+* an example SVN repo with an example project
+* an example project checkout and test machine checkout
+* 3 scheduled tasks performing the core of the CI process
 
