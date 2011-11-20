@@ -1,4 +1,11 @@
-@echo off
+This is _test-revs_
+
+The script tests a given revision of the code by ensuring
+the test appliance revision is updated to the correct version.
+One prerequisite of this is that the test update script should always fetch the 
+correct version of the test assets, based upon the update revision.
+
+'''@echo off
 setlocal
 
 set TESTROOT=%1
@@ -9,9 +16,9 @@ for /F %%R in ('dir /b %TESTROOT%\revs-incoming\*') do (
 )
 
 @endlocal
-exit /b
+exit /b'''
 
-:testrev
+''':testrev
 
   @echo updating to r%REV% ...
   
@@ -21,4 +28,4 @@ exit /b
   move %TESTROOT%\revs-incoming\%REV% %TESTROOT%\revs-done
 
 goto :eof
-
+'''
