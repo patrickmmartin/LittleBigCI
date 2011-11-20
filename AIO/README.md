@@ -4,7 +4,7 @@ Run test-bootstrap.bat
 
 You will see something like the following output for the first run (on Window 7 Home)
 
-
+'''
 ############### testing bootstrap
 making root
 making repository
@@ -83,3 +83,4 @@ repo creation succeeded
 scripts folder OK
 scripts folder OK
 test-appliance folder OK
+'''
