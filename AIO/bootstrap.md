@@ -1,4 +1,4 @@
-'''@echo off
+```@echo off
 if (%1)==() echo need root folder! & goto :usage
 
 set TASK_SWITCH=/RU SYSTEM
@@ -238,4 +238,4 @@ echo [4] create a test appliance in ROOT\test-machine
 echo [5]  create the required scheduled tasks to implement the CI workflow
 
 exit /b 1
-'''
+```
