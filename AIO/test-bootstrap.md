@@ -1,4 +1,4 @@
-'''@echo off
+```@echo off
 if exist %TEMP%\CI (
   echo %%TEMP%%\CI exists - removing %%TEMP%%\CI
   rmdir /s / q %TEMP%\CI
@@ -36,4 +36,4 @@ goto :eof
 echo %SCRIPTERROR%
 
 exit /b 1
-'''
+```
