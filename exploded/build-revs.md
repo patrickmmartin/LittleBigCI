@@ -8,7 +8,8 @@ is thatsome projects may be composed of various locations and hence the concaten
 of the update output is required to know when a build may be needed.
 
 
-'''@echo off
+```
+@echo off
 setlocal
 
 set BUILDROOT=%1
@@ -20,9 +21,11 @@ for /F %%R in ('dir /b %BUILDROOT%\revs-incoming\*') do (
 )
 
 @endlocal
-exit /b'''
+exit /b
+```
 
-''':buildrev
+```
+:buildrev
 
   @echo updating to r%REV% ...
   
@@ -47,5 +50,6 @@ exit /b'''
   )
   move %BUILDROOT%\revs-incoming\%REV% %BUILDROOT%\revs-done
 
-goto :eof'''
+goto :eof
+```
 
