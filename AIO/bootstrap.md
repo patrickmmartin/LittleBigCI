@@ -1,4 +1,6 @@
-```@echo off
+
+```
+@echo off
 if (%1)==() echo need root folder! & goto :usage
 
 set TASK_SWITCH=/RU SYSTEM
