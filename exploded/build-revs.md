@@ -4,9 +4,14 @@ This script is invoked periodically
 and will determine whether the targetted checkout has in fact
 been updated in any significant manner, based upon the SVN status message.
 The reason why this may be useful, as opposed to noting there has been a commit, 
-is thatsome projects may be composed of various locations and hence the concatentation 
+is that some projects may be composed of various locations and hence the concatentation 
 of the update output is required to know when a build may be needed.
 
+
+Fairly standard loop over the dir contents.
+A local environment  '''setlocal''' is used to allow scripts to be chained together without accidentally sharing state. 
+The dir is assumed to be a set of files named for the appropriate Subversion revision.
+Invokes the label _buildrev_ for the revision nos encountered 
 
 ```
 @echo off
@@ -23,6 +28,13 @@ for /F %%R in ('dir /b %BUILDROOT%\revs-incoming\*') do (
 @endlocal
 exit /b
 ```
+
+_buildrev_ does the actual work: the Subversion WC directory _project_ is updated to the passed revision,
+and the SVN output parsed for file modifications.
+If any modification has occurred, a build output dir is created by SVN revision,
+and the build process should be invoked to produce the complete build in that location.
+Finally, the incoming revision is moved to the _done_ queue dir - allowing for completion status to be checked, for example.
+Note that it is trivial to replay builds by moving the build markers back from revs-done to revs-incoming. 
 
 ```
 :buildrev
