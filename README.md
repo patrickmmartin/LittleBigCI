@@ -1,22 +1,22 @@
-Little Big CI
+# Little Big CI
 
-# Overview
+## Overview
 
 The scripts presented at GTAC 2008.
 
 Right now you can fetch these files, run ```test-bootstrap``` and on my Windows 7 Home laptop, 
 you're good to go with the canned parameters.
 
-## Prerequisites
+### Prerequisites
 
 Windows XP, 2003, Vista, Windows 7, Windows 2008?
 Full set of SVN binaries on the path.
 
-## Nice to Haves
+### Nice to Haves
 
 TortoiseSVN is a nice touch: Ensure the working copy and repo formats match.
 
-## Outputs
+### Outputs
 
 You will get:
 * an example SVN repo with an example project
