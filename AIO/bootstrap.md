@@ -1,12 +1,15 @@
 # bootstrap.md
 
-## overview 
+# overview 
  
 The script places all the artefacts under a root folder;
 writes out the script files used by the scheduled tasks and sets up the tasks.
 After that point, the build and test workspaces will be updated incrementally upon 
 any commit and a standard build command invoked.
 
+Subroutines are used in aid of keeping the main flow readable from the top down.  
+
+# start of script
 
 ## parameter validation, or show usage text
 
@@ -171,6 +174,8 @@ echo, OK, we're done!
 
 exit /b %SCRIPTERROR%
 ```
+
+# script subroutines
 
 ## error handling
 
