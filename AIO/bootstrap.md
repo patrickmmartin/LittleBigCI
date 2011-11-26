@@ -1,11 +1,31 @@
+# bootstrap.md
+
+## overview 
+ 
+The script places all the artefacts under a root folder;
+writes out the script files used by the scheduled tasks and sets up the tasks.
+After that point, the build and test workspaces will be updated incrementally upon 
+any commit and a standard build command invoked.
+
+
+## parameter validation, or show usage text
 
 ```
 @echo off
 if (%1)==() echo need root folder! & goto :usage
+```
 
+addiional optional parameter is whether to turn off the system level switch for the scheduled tasks 
+and run tasks under the invoking user account
+
+```
 set TASK_SWITCH=/RU SYSTEM
 if (%2)==(/USER) set TASK_SWITCH=
+```
 
+## create root
+
+```
 set SCRIPTERROR=
 
 if not exist %1 (
@@ -13,11 +33,19 @@ if not exist %1 (
   mkdir %1
 )
 if errorlevel 1 goto :error
+```
 
+## create SVN repository
+
+```
 echo making repository
 svnadmin create %1\repo
 if errorlevel 1 goto :error
+```
 
+a little bit of syntactic sugar for more legible script programming
+
+```
 :: set up a couple of useful variables
 set ROOT=%1
 :: need to avoid back slashes getting URL encoded so set up a derived variable
@@ -29,12 +57,19 @@ set TEST_APPLIANCE=%ROOT%\test-appliance
 
 set PROJECT_ROOT=%ROOT%\project
 set SCRIPT_ROOT=%ROOT%\scripts
+```
 
+## create folder for scripts
 
+```
 echo making scripts folder
 mkdir %SCRIPT_ROOT%
 if errorlevel 1 goto :error
+```
 
+## create the build appliance folders
+
+```
 echo making build appliance folder
 mkdir %BUILD_APPLIANCE%
 mkdir %BUILD_APPLIANCE%\revs-incoming
@@ -42,14 +77,22 @@ mkdir %BUILD_APPLIANCE%\revs-done
 mkdir %BUILD_APPLIANCE%\working
 mkdir %BUILD_APPLIANCE%\builds
 if errorlevel 1 goto :error
+```
 
+## create the test appliance folders
+
+```
 echo making test appliance folder
 mkdir %TEST_APPLIANCE%
 mkdir %TEST_APPLIANCE%\revs-incoming
 mkdir %TEST_APPLIANCE%\revs-done
 mkdir %TEST_APPLIANCE%\working
 if errorlevel 1 goto :error
+```
 
+## SVN commits to example project, which in due course will appear in the build appliance, then test appliance.
+
+```
 echo setting up example project in repository
 echo this is the very first commit to this location > scratch.txt
 :: no authentication yet
@@ -59,21 +102,41 @@ svn mkdir file:///%REPOURL%/project/trunk -m"creating trunk" --username Admin 1>
 if errorlevel 1 goto :error
 svn import scratch.txt file:///%REPOURL%/project/trunk/scratch.txt -m"initial revision of scratch.txt" --username Admin 1>nul
 if errorlevel 1 goto :error
+```
 
+## populate the build appliance
+
+```
 echo creating checkout of the project in the build appliance
 svn checkout file:///%REPOURL%/project/trunk/ %BUILD_APPLIANCE%\project 1>nul
 if errorlevel 1 goto :error
+```
 
+## populate the test appliance
+
+```
 echo creating checkout of the project in the test appliance
 svn checkout file:///%REPOURL%/project/trunk/ %TEST_APPLIANCE%\project 1>nul
 if errorlevel 1 goto :error
+```
 
+## the post-commit hook is what ties repo commits into the appliancess
+
+```
 echo create post-commit hook
 echo echo %%2 ^>^> %%1\revs-queue.txt  > %REPOBASE%\hooks\post-commit.bat
 if errorlevel 1 goto :error
+```
 
+## write out the original scripts
+
+```
 call :write-scripts
+```
 
+## copy the scripts into place in the root
+
+```
 echo create post-revs script
 copy post-revs.bat %SCRIPT_ROOT%
 if errorlevel 1 goto :error
@@ -85,7 +148,11 @@ if errorlevel 1 goto :error
 echo create test-revs script
 copy test-revs.bat %SCRIPT_ROOT%
 if errorlevel 1 goto :error
+```
 
+## create the scheduled tasks
+
+```
 echo create update scheduled task for posting new revisions into the build-appliance
 schtasks /Create %TASK_SWITCH% /TN post-revs /SC MINUTE /MO 2 /TR "%SCRIPT_ROOT%\post-revs.bat %REPOBASE% %BUILD_APPLIANCE%"
 if errorlevel 1 goto :error
@@ -97,12 +164,18 @@ if errorlevel 1 goto :error
 echo create update scheduled task for testing new revisions 
 schtasks /Create %TASK_SWITCH% /TN test-revs /SC MINUTE /MO 2 /TR "%SCRIPT_ROOT%\test-revs.bat %TEST_APPLIANCE%"
 if errorlevel 1 goto :error
+```
 
+```
 echo, OK, we're done!
 
 exit /b %SCRIPTERROR%
+```
 
+## error handling
 
+one very useful special case is handled, else attempt to interpret as a system error
+```
 :error
 
 set SCRIPTERROR=%errorlevel%
@@ -117,8 +190,11 @@ if %SCRIPTERROR%==9009 (
 ) else echo the following may be indicative of the system error message: && net helpmsg %SCRIPTERROR%
 
 exit /b %SCRIPTERROR%
+```
 
+## writes the scripts out
 
+```
 :write-scripts
 
 call :write-post-revs
@@ -126,7 +202,11 @@ call :write-build-revs
 call :write-test-revs
 
 goto :eof
+```
 
+## post-revs
+
+```
 :write-post-revs
 
 echo writing out post-revs...
@@ -140,7 +220,11 @@ if exist post-revs.bat del post-revs.bat
 
 
 goto :eof
+```
 
+## build-revs
+
+```
 :write-build-revs
 
 echo writing out build-revs...
@@ -192,7 +276,11 @@ if exist build-revs.bat del build-revs.bat
 
 
 goto :eof
+```
 
+## test-revs
+
+```
 :write-test-revs
 
 echo writing out test-revs...
@@ -226,9 +314,11 @@ if exist test-revs.bat del test-revs.bat
 
 
 goto :eof
+```
 
+## usage routine for no parameters
 
-
+```
 :usage 
 echo usage: %~n0 ROOT
 echo script to build working continuuous integration model office 
