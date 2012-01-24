@@ -24,9 +24,9 @@ You will get
  + an example project checkout and test machine checkout
  + 3 scheduled tasks performing the core of the CI process
 
-## What use it this?
+## What use is this?
 
-None - there are many much more capable CI tools with actual functionality and communities.
+None - there are many, much more capable CI tools with actual functionality and communities supporting them.
 *However*, if you want to play around with a toy CI process, this is not a bad start.
 Furthermore, working through the pros and cons of the actual process implemented is an extemely instructive exercise.  
 
